@@ -15,7 +15,7 @@ The script checks and installs the following tools if missing:
 - `fc-cache` / `fontconfig` – for font management
 - `nvim` – Neovim editor
 - `neofetch` – system information display
-
+- `Powerlevel10k` – display-TTY
 ## Features
 
 - Automatically sets up aliases and command replacement reminders
@@ -31,7 +31,8 @@ Clone this repository:
 git clone https://github.com/sz0g0n/pretty-terminal-script.git
 cd pretty-terminal-script
 chmod +x pretty-SHELL.sh
-
+./pretty-SHELL.sh
+```
 
 ## Third-party tools and licenses
 
