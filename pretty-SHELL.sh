@@ -2,38 +2,37 @@
 
 set -e
 
-# ===== 1. Potwierdzenie =====
+# ===== 1. Confirmation =====
 
 echo ""
 echo ""
-echo -e "\033[0;32mTen skrypt zainstaluje zsh, powerlevel10k, eza (lub exa), btop,\033[0m"
-echo -e "\033[0;32moraz ustawi zsh jako domyślną powłokę.\033[0m"
+echo -e "\033[0;32mThis script will install zsh, powerlevel10k, eza (or exa), btop,\033[0m"
+echo -e "\033[0;32mand set zsh as the default shell.\033[0m"
 echo ""
 echo ""
-read -p $'Czy chcesz kontynuować? (\033[0;32mtak\033[0m/\033[0;31mnie\033[0m): ' CONFIRM
-if [[ "$CONFIRM" != "tak" ]]; then
-    echo "Przerwano."
+read -p $'Do you want to continue? (\033[0;32myes\033[0m/\033[0;31mno\033[0m): ' CONFIRM
+if [[ "$CONFIRM" != "yes" ]]; then
+    echo "Aborted."
     exit 0
 fi
 
-# ===== 2. Wykrycie dystrybucji i instalacja =====
-# ===== 2. Wykrycie dystrybucji i instalacja =====
+# ===== 2. Detecting distribution and installation =====
 if [ -f /etc/os-release ]; then
     . /etc/os-release
 else
-    echo "Nie wykryto /etc/os-release"
+    echo "No /etc/os-release detected"
     exit 1
 fi
 echo ""
 
 DIST_NAME="$ID"
-# jeśli Arch, dodaj "(btw)"
+# if Arch, add "(btw)"
 if [[ "$ID" == "arch" ]]; then
     DIST_NAME="$DIST_NAME (btw)"
 fi
 
-# Kolorowanie nazwy dystrybucji na niebiesko (34)
-echo -e "Wykryta dystrybucja: \033[0;34m$DIST_NAME\033[0m"
+# Color the distribution name in blue (34)
+echo -e "Detected distribution: \033[0;34m$DIST_NAME\033[0m"
 echo ""
 
 
@@ -41,7 +40,7 @@ install_if_missing() {
     CMD=$1
     PKG=$2
  if ! command -v "$CMD" &>/dev/null; then
-        echo "Instaluję $PKG..."
+        echo "Installing $PKG..."
         case "$ID" in
             ubuntu|debian|linuxmint|pop)
                 sudo apt update
@@ -62,11 +61,11 @@ install_if_missing() {
                 ;;
         esac
     else
-        echo "$PKG już zainstalowany, pomijam."
+        echo "$PKG is already installed, skipping."
     fi
 }
 
-# Sprawdzenie i instalacja pakietów
+# Package check and installation
 install_if_missing zsh zsh
 install_if_missing eza eza
 install_if_missing btop btop
@@ -76,104 +75,105 @@ install_if_missing unzip unzip
 install_if_missing fc-cache fontconfig
 install_if_missing nvim neovim
 install_if_missing neofetch neofetch
-# ===== 2b. Instalacja czcionki w konsoli (Ubuntu Server) =====
+
+# ===== 2b. Console font installation (Ubuntu Server) =====
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
     CONSOLE_FONT="/usr/share/consolefonts/MesloLGSNF.psf"
     if [ ! -f "$CONSOLE_FONT" ]; then
         sudo mkdir -p /usr/share/consolefonts
-        # Pobranie przykładowej czcionki w formacie PSF (konsola)
+        # Download example font in PSF format (console)
         sudo wget -q -O "$CONSOLE_FONT" "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Meslo/L/Regular/complete/MesloLGS%20NF%20Regular.ttf"
-        # Ustawienie czcionki w konfiguracji konsoli
+        # Set font in console configuration
         sudo sed -i 's/^FONTFACE=.*/FONTFACE="MesloLGSNF"/' /etc/default/console-setup
         sudo sed -i 's/^FONTSIZE=.*/FONTSIZE="16"/' /etc/default/console-setup
         sudo setupcon
-        echo "Ustawiono czcionkę konsoli na MesloLGS NF."
-	 echo "-----------------------------------------------------------------------------"
+        echo "Console font set to MesloLGS NF."
+        echo "-----------------------------------------------------------------------------"
         echo ""
-        echo -e "\033[1;31m---------------------- Może być wymagany reboot---------------------.\033[0m"
-        echo -e "\033[1;31mJeżeli kożystasz z ssh pamiętaj o zainstalowaniu czcionki w systemie.\033[0m"
+        echo -e "\033[1;31m---------------------- A reboot may be required ---------------------.\033[0m"
+        echo -e "\033[1;31mIf using SSH, remember to install the font on your system.\033[0m"
         echo ""
         echo "-----------------------------------------------------------------------------"
 
     else
-        echo "Czcionka konsoli MesloLGS NF już ustawiona, pomijam."
-	 echo "-----------------------------------------------------------------------------"
+        echo "Console font MesloLGS NF is already set, skipping."
+        echo "-----------------------------------------------------------------------------"
         echo ""
-        echo -e "\033[1;31m---------------------- Może być wymagany reboot---------------------.\033[0m"
-        echo -e "\033[1;31mJeżeli kożystasz z ssh pamiętaj o zainstalowaniu czcionki w systemie.\033[0m"
+        echo -e "\033[1;31m---------------------- A reboot may be required ---------------------.\033[0m"
+        echo -e "\033[1;31mIf using SSH, remember to install the font on your system.\033[0m"
         echo ""
         echo "-----------------------------------------------------------------------------"
 
     fi
 fi
 
-# ===== 3. Instalacja powerlevel10k =====
+# ===== 3. Install powerlevel10k =====
 if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
-    echo "Zainstalowano powerlevel10k."
+    echo "Powerlevel10k installed."
     echo ""
 else
-    echo "Powerlevel10k już istnieje, pomijam instalację."
+    echo "Powerlevel10k already exists, skipping installation."
     echo ""
 fi
 
-# Dodanie do .zshrc (jeśli brak wpisu)
+# Add to .zshrc (if missing)
 if ! grep -q "powerlevel10k" ~/.zshrc 2>/dev/null; then
     echo 'source ~/.p10k/powerlevel10k.zsh-theme' >> ~/.zshrc
-    echo "Dodano powerlevel10k do .zshrc."
+    echo "Added powerlevel10k to .zshrc."
     echo ""
 else
-    echo "Wpis do .zshrc już istnieje, pomijam."
+    echo "Entry already exists in .zshrc, skipping."
     echo ""
 fi
 
-# ===== 4. Instalacja czcionki MesloLGS NF =====
+# ===== 4. Install MesloLGS NF font =====
 
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
-    echo "Ubuntu/Debian – pomijam instalację czcionki do GUI/terminala, użyj ustawień konsoli."
+    echo "Ubuntu/Debian – skipping GUI/terminal font installation, use console settings."
 else
 
-	FONT_DIR="$HOME/.local/share/fonts"
-	mkdir -p "$FONT_DIR"
+        FONT_DIR="$HOME/.local/share/fonts"
+        mkdir -p "$FONT_DIR"
 
-	if [ ! -f "$FONT_DIR/MesloLGS NF Regular.ttf" ]; then
-	    cd "$FONT_DIR" || exit 1
-	    wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip -O Meslo.zip
-	    unzip -o -q Meslo.zip -d Meslo
-	    cp Meslo/*.ttf "$FONT_DIR"
-	    rm -rf Meslo Meslo.zip
-	    fc-cache -fv > /dev/null
-	    echo "Zainstalowano czcionkę MesloLGS NF."
-	    echo ""
-	else
-	    echo "Czcionka MesloLGS NF już istnieje, pomijam."
-	    echo ""
-	fi
-	echo "-----------------------------------------------------------------------------"
-	echo ""
-	echo -e "\033[1;31mPamiętaj, aby w ustawieniach terminala wybrać czcionkę 'MesloLGS NF'.\033[0m"
-	echo -e "\033[1;31m---------------------- Może być wymagany reboot---------------------.\033[0m"
-	echo -e "\033[1;31mJeżeli kożystasz z ssh pamiętaj o zainstalowaniu czcionki w systemie.\033[0m"
-	echo ""
-	echo "-----------------------------------------------------------------------------"
+        if [ ! -f "$FONT_DIR/MesloLGS NF Regular.ttf" ]; then
+            cd "$FONT_DIR" || exit 1
+            wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip -O Meslo.zip
+            unzip -o -q Meslo.zip -d Meslo
+            cp Meslo/*.ttf "$FONT_DIR"
+            rm -rf Meslo Meslo.zip
+            fc-cache -fv > /dev/null
+            echo "MesloLGS NF font installed."
+            echo ""
+        else
+            echo "MesloLGS NF font already exists, skipping."
+            echo ""
+        fi
+        echo "-----------------------------------------------------------------------------"
+        echo ""
+        echo -e "\033[1;31mRemember to select 'MesloLGS NF' font in your terminal settings.\033[0m"
+        echo -e "\033[1;31m---------------------- A reboot may be required ---------------------.\033[0m"
+        echo -e "\033[1;31mIf using SSH, remember to install the font on your system.\033[0m"
+        echo ""
+        echo "-----------------------------------------------------------------------------"
 fi
-#czekaj aż urzytkownik przeczyta
+# Wait for user to read
 
 for i in {10..1}; do
-    echo -ne "\rOdliczanie: $i s"
+    echo -ne "\rCountdown: $i s"
     sleep 1
 done
-echo -e "\rCzas minął!       "
+echo -e "\rTime's up!       "
 
-# ===== 5. Zmiana powłoki =====
+# ===== 5. Change shell =====
 CURRENT_SHELL=$(getent passwd $USER | cut -d: -f7)
 if [[ "$CURRENT_SHELL" != "$(command -v zsh)" ]]; then
     chsh -s "$(command -v zsh)"
-    echo "Powłoka bieżącego użytkownika została zmieniona na zsh."
+    echo "The current user's shell has been changed to zsh."
 else
-    echo "Użytkownik już ma zsh jako domyślną powłokę, pomijam."
+    echo "User already has zsh as the default shell, skipping."
 fi
-# zmiany w pliku .zshrc
+# changes in .zshrc
 # alias ee
 if ! grep -Fxq 'alias ee="eza -lha --header --total-size --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' ~/.zshrc; then
     echo 'alias ee="eza -lha --header --total-size --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
@@ -187,84 +187,83 @@ fi
 if ! grep -q "neofetch" ~/.zshrc; then
     cat <<'EOF' >> ~/.zshrc
 
-# Uruchamianie neofetch tylko w interaktywnej sesji, poziom powłoki = 1
+# Run neofetch only in interactive session, shell level = 1
 if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ] && command -v neofetch >/dev/null 2>&1; then
     echo -e "\n"
     neofetch
 fi
 EOF
 fi
-# 
-echo ""
-echo ""
-echo -e "\033[0;32mCzy chcesz ustawić notatkę przypominającą o zamiennikach komend?\033[0m"
-echo -e "\033[0;32mBędzie się ona wyświetlać przy uruchomieniu systemu (można zawsze wyłączyć w .zshrc).\033[0m"
-echo ""
-read -p $'Czy chcesz ustawić? (\033[0;32mtak\033[0m/\033[0;31mnie\033[0m): ' CONFIRM
 
-if [[ "$CONFIRM" == "tak" ]]; then
-    if ! grep -q "Przypominajka zamienników komend" ~/.zshrc; then
+echo ""
+echo ""
+echo -e "\033[0;32mWould you like to set a reminder note for command replacements?\033[0m"
+echo -e "\033[0;32mIt will appear at system startup (can always be disabled in .zshrc).\033[0m"
+echo ""
+read -p $'Would you like to set it? (\033[0;32myes\033[0m/\033[0;31mno\033[0m): ' CONFIRM
+
+if [[ "$CONFIRM" == "yes" ]]; then
+    if ! grep -q "Command replacement reminder" ~/.zshrc; then
         cat <<'EOF' >> ~/.zshrc
 
-# ===== Przypominajka zamienników komend =====
+# ===== Command replacement reminder =====
 if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ]; then
-    echo -e "\033[1;33m------ Zamienniki komend ------\033[0m"
-    echo -e "\033[0;36remind -> przypomina komendy\033[0m"
+    echo -e "\033[1;33m------ Command Replacements ------\033[0m"
+    echo -e "\033[0;36remind -> shows command replacements\033[0m"
     echo -e "\033[0;36mtop   -> btop\033[0m"
     echo -e "\033[0;36mls    -> e / ee (alias eza)\033[0m"
     echo -e "\033[0;36mcat   -> bat\033[0m"
-    echo -e "\033[1;33m-------------------------------\033[0m"
+    echo -e "\033[1;33m----------------------------------\033[0m"
 fi
 
-# ===== Alias do wyświetlania przypominajki zamienników =====
+# ===== Alias to display command replacement reminder =====
 show_replacements() {
-    echo -e "\033[1;33m------ Zamienniki komend ------\033[0m"
+    echo -e "\033[1;33m------ Command Replacements ------\033[0m"
     echo -e "\033[0;36mtop   -> btop\033[0m"
     echo -e "\033[0;36mls    -> e / ee (alias eza)\033[0m"
     echo -e "\033[0;36mcat   -> bat\033[0m"
-    echo -e "\033[1;33m-------------------------------\033[0m"
+    echo -e "\033[1;33m----------------------------------\033[0m"
 }
 alias remind="show_replacements"
 EOF
-        echo -e "\033[0;32mDodano przypominajkę zamienników do .zshrc.\033[0m"
+        echo -e "\033[0;32mCommand replacement reminder added to .zshrc.\033[0m"
     else
-        echo -e "\033[0;33mPrzypominajka zamienników już istnieje w .zshrc, pomijam.\033[0m"
+        echo -e "\033[0;33mCommand replacement reminder already exists in .zshrc, skipping.\033[0m"
     fi
 fi
-# dodanie wzmianki do .zshrc która wyłączy powidaomienia związane z instant prompt
+
+# add note to .zshrc to disable instant prompt notifications
 if ! grep -q "POWERLEVEL9K_INSTANT_PROMPT" ~/.zshrc; then
     echo "typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet" >> ~/.zshrc
-    echo -e "\033[0;32mDodano POWERLEVEL9K_INSTANT_PROMPT=off do .zshrc\033[0m"
+    echo -e "\033[0;32mAdded POWERLEVEL9K_INSTANT_PROMPT=off to .zshrc\033[0m"
 else
-    echo -e "\033[0;33mPOWERLEVEL9K_INSTANT_PROMPT już istnieje w .zshrc, pomijam.\033[0m"
+    echo -e "\033[0;33mPOWERLEVEL9K_INSTANT_PROMPT already exists in .zshrc, skipping.\033[0m"
 fi
 
-# ===== 6. Zakończenie skryptu =====
-echo -e "\033[0;32mAby wszystko działało poprawnie, może być wymagany reboot.\033[0m"
-echo -e "\033[0;32mCo chcesz zrobić?\033[0m"
-echo "1) Nic / wyłączyć skrypt"
-echo -e "2) Wykonać reboot (\033[0;31mrekomendowane\033[0m)"
-echo "3) Uruchomić konfigurator powerlevel10k"
+# ===== 6. End of script =====
+echo -e "\033[0;32mA reboot may be required for everything to work correctly.\033[0m"
+echo -e "\033[0;32mWhat do you want to do?\033[0m"
+echo "1) Nothing / exit script"
+echo -e "2) Reboot system (\033[0;31mrecommended\033[0m)"
+echo "3) Launch powerlevel10k configurator"
 
-read -rp "Wybierz opcję [1-3]: " choice
+read -rp "Choose an option [1-3]: " choice
 
 case "$choice" in
     1)
-        echo "Kończę skrypt."
+        echo "Exiting script."
         exit 0
         ;;
     2)
-        echo "Restart systemu..."
+        echo "Restarting system..."
         sudo reboot
         ;;
     3)
-        echo "Uruchamiam konfigurator powerlevel10k..."
+        echo "Launching powerlevel10k configurator..."
         exec zsh -c 'exec zsh -l -i -c "p10k configure"'
         ;;
     *)
-        echo "Nieprawidłowy wybór, kończę skrypt."
+        echo "Invalid choice, exiting script."
         exit 1
         ;;
 esac
-
-	
