@@ -78,19 +78,45 @@ install_if_missing unzip unzip
 install_if_missing fc-cache fontconfig
 install_if_missing nvim neovim
 install_if_missing neofetch neofetch
+install_if_missing bat bat
 # ===== 2b. Instalacja czcionki w konsoli (Ubuntu Server) =====
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
-    CONSOLE_FONT="/usr/share/consolefonts/MesloLGSNF.psf"
+    CONSOLE_FONT="/usr/share/consolefonts/MesloLGLDZNerdFontMono-Regular.psf"
     if [ ! -f "$CONSOLE_FONT" ]; then
-        sudo mkdir -p /usr/share/consolefonts
-        # Pobranie przykładowej czcionki w formacie PSF (konsola)
-        sudo wget -q -O "$CONSOLE_FONT" "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Meslo/L/Regular/complete/MesloLGS%20NF%20Regular.ttf"
-        # Ustawienie czcionki w konfiguracji konsoli
-        sudo sed -i 's/^FONTFACE=.*/FONTFACE="MesloLGSNF"/' /etc/default/console-setup
-        sudo sed -i 's/^FONTSIZE=.*/FONTSIZE="16"/' /etc/default/console-setup
-        sudo setupcon
-        echo "Ustawiono czcionkę konsoli na MesloLGS NF."
-    fi
+	# URL do pliku PSF na GitHub
+	PSF_URL="https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
+
+	# Docelowy katalog czcionek konsoli
+	PSF_DIR="/usr/share/consolefonts"
+	PSF_FILE="$PSF_DIR/MesloLGLDZNerdFontMono-Regular.psf"
+
+	# Tworzymy katalog, jeśli nie istnieje
+	sudo mkdir -p "$PSF_DIR"
+
+	# Pobranie czcionki PSF
+	sudo wget -q -O "$PSF_FILE" "$PSF_URL"
+
+	# Ustawienie czcionki w konfiguracji konsoli
+	sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" /etc/default/console-setup
+
+	# Zmiana czcionki dla urzytkowników gui
+	mkdir -p ~/.local/share/fonts
+	wget -q -O ~/.local/share/fonts/MesloLGLDZNerdFont-Regular.ttf https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_ttf/MesloLGLDZNerdFont-Regular.ttf
+	fc-cache -fv
+
+	if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+	    echo "Środowisko GNOME – ustawiam czcionkę w GNOME Terminal..."
+
+
+	    # 1. Pobranie UUID domyślnego profilu GNOME Terminal
+	    PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+
+	    # 2. Ustawienie czcionki (np. MesloLGS NF 12pt)
+	    gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" font "MesloLGLDZNerdFont-Regular 12"
+
+	    # 3. Włączenie własnej czcionki
+	    gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" use-system-font false
+        fi
 fi
 # ===== 3. Instalacja powerlevel10k =====
 if [ ! -d "${HOME}/.p10k" ]; then
@@ -199,7 +225,7 @@ if grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme; then
 else
     cp ~/.p10k/powerlevel10k.zsh-theme ~/.p10k/powerlevel10k.zsh-theme.org
     rm ~/.p10k/powerlevel10k.zsh-theme
-    wget -O ~/.p10k/powerlevel10k.zsk-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
+    wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
     echo "zainstalowano konfiguracię p10k"
 fi
 
@@ -207,4 +233,8 @@ fi
 # ===== 6. Zakończenie skryptu =====
 echo -e '\033[0;31mPAMIĘTAJ USTAWIĆ NA KOŃCU CZCIONKĘ W TERMINALU NA MERLO!!! BARDZO WAŻNE (automatyczne w dystrybucjiach na bazie debiana)\033[0m'
 echo -e '\033[0;31mWymagany jest reboot. bez niego nie załadują się wszystkie funkcjię\033[0m'
-sudo reboot
+read -p "Chcesz zrestartować teraz? (tak/nie): " REBOOT
+if [[ "$REBOOT" == "tak" ]]; then
+    sudo reboot
+fi
+exit 0

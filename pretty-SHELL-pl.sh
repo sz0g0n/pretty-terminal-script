@@ -78,17 +78,19 @@ install_if_missing nvim neovim
 install_if_missing neofetch neofetch
 # ===== 2b. Instalacja czcionki w konsoli (Ubuntu Server) =====
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
-    CONSOLE_FONT="/usr/share/consolefonts/MesloLGSNF.psf"
+    CONSOLE_FONT="/usr/share/consolefonts/MesloLGLDZNerdFontMono-Regular.psf"
     if [ ! -f "$CONSOLE_FONT" ]; then
-        sudo mkdir -p /usr/share/consolefonts
-        # Pobranie przykładowej czcionki w formacie PSF (konsola)
-        sudo wget -q -O "$CONSOLE_FONT" "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Meslo/L/Regular/complete/MesloLGS%20NF%20Regular.ttf"
-        # Ustawienie czcionki w konfiguracji konsoli
-        sudo sed -i 's/^FONTFACE=.*/FONTFACE="MesloLGSNF"/' /etc/default/console-setup
-        sudo sed -i 's/^FONTSIZE=.*/FONTSIZE="16"/' /etc/default/console-setup
-        sudo setupcon
+        PSF_DIR="/usr/share/consolefonts"
+        PSF_FILE="$PSF_DIR/MesloLGLDZNerdFontMono-Regular.psf"
+        sudo mkdir -p "$PSF_DIR"
+        sudo wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMo>
+        sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" /etc/default/console-setup
+
+        mkdir -p ~/.local/share/fonts
+        wget -q -O ~/.local/share/fonts/MesloLGLDZNerdFont-Regular.ttf "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads>
+        fc-cache -fv
         echo "Ustawiono czcionkę konsoli na MesloLGS NF."
-	 echo "-----------------------------------------------------------------------------"
+         echo "-----------------------------------------------------------------------------"
         echo ""
         echo -e "\033[1;31m---------------------- Może być wymagany reboot---------------------.\033[0m"
         echo -e "\033[1;31mJeżeli kożystasz z ssh pamiętaj o zainstalowaniu czcionki w systemie.\033[0m"
@@ -97,15 +99,21 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 
     else
         echo "Czcionka konsoli MesloLGS NF już ustawiona, pomijam."
-	 echo "-----------------------------------------------------------------------------"
+         echo "-----------------------------------------------------------------------------"
         echo ""
         echo -e "\033[1;31m---------------------- Może być wymagany reboot---------------------.\033[0m"
         echo -e "\033[1;31mJeżeli kożystasz z ssh pamiętaj o zainstalowaniu czcionki w systemie.\033[0m"
         echo ""
         echo "-----------------------------------------------------------------------------"
 
+        if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+            PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+            gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" font "MesloLGLDZNerdFont->
+            gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" use-system-font false
+        fi
     fi
 fi
+
 
 # ===== 3. Instalacja powerlevel10k =====
 if [ ! -d "${HOME}/.p10k" ]; then
