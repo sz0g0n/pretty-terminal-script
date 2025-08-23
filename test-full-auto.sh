@@ -147,9 +147,19 @@ EOF
 fi
 
 # ===== 6. Powerlevel10k automatycznie =====
+if [ -f ~/.p10k/powerlevel10k.zsh-theme ]; then
+    if ! grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme; then
+        cp ~/.p10k/powerlevel10k.zsh-theme ~/.p10k/powerlevel10k.zsh-theme.org 2>/dev/null
+        rm ~/.p10k/powerlevel10k.zsh-theme 2>/dev/null
+        wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
+    fi
+else
+    wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
+fi
+
 # ===== 6. Powerlevel10k automatycznie =====
 if [ -f ~/.p10k.zsh ]; then
-    if ! grep -q "pretty-terminal" ~/.p10k.zsh; then
+    if ! grep -q ~/.p10k.zsh >2/dev/null; then
         cp ~/.p10k.zsh ~/.p10k.zsh.org 2>/dev/null
         rm ~/.p10k.zsh 2>/dev/null
         wget -O ~/.p10k.zsh https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
@@ -162,3 +172,4 @@ fi
 echo -e '\033[0;31mPAMIĘTAJ: ustaw czcionkę w terminalu na MERLO po zakończeniu!\033[0m'
 read -p "Chcesz zrestartować teraz? (tak/nie): " REBOOT
 [[ "$REBOOT" == "tak" ]] && sudo reboot
+ 
