@@ -92,10 +92,6 @@ fi
 if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
 fi
-#    wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
-if ! grep -q ".p10.zsh" ~/.zshrc 2>/dev/null; then
-    echo 'source ~/.p10k.zsh' >> ~/.zshrc
-fi
 # ===== 6. Powerlevel10k automatycznie =====
 # Pobierz motyw, jeśli brak lub brak wzmianki 'pretty-terminal'
 if [ ! -f ~/.p10k/powerlevel10k.zsh-theme ] || \
@@ -114,6 +110,13 @@ else
     wget -O ~/.p10k.zsh \
     https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
 fi
+
+# Doanie source do pliku .zshrc
+if ! grep -q ".p10.zsh" ~/.zshrc 2>/dev/null; then
+    echo 'source ~/.p10k.zsh' >> ~/.zshrc
+fi
+
+
 # ===== 4. Czcionki GUI/Terminal (inne dystrybucje) =====
 if [[ "$ID" != "ubuntu" && "$ID" != "debian" ]]; then
     FONT_DIR="$HOME/.local/share/fonts"
@@ -138,7 +141,7 @@ grep -qxF 'alias ee="eza -lha --header --total-size --sort=name --icons --group-
 grep -qxF 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' ~/.zshrc || \
     echo 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
 
-if ! grep -q "neofetch" ~/.zshrc 2>dev/null; then
+if ! grep -q "neofetch" ~/.zshrc 2>/dev/null; then
     cat <<'EOF' >> ~/.zshrc
 
 if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ] && command -v neofetch >/dev/null 2>&1; then
