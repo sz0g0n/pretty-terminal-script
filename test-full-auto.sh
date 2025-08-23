@@ -93,10 +93,27 @@ if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
 fi
 #    wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
-if ! grep -q "p10.zsh" ~/.zshrc 2>/dev/null; then
+if ! grep -q ".p10.zsh" ~/.zshrc 2>/dev/null; then
     echo 'source ~/.p10k.zsh' >> ~/.zshrc
 fi
+# ===== 6. Powerlevel10k automatycznie =====
+# Pobierz motyw, jeśli brak lub brak wzmianki 'pretty-terminal'
+if [ ! -f ~/.p10k/powerlevel10k.zsh-theme ] || \
+   ! grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme 2>/dev/null; then
+    cp ~/.p10k/powerlevel10k.zsh-theme ~/.p10k/powerlevel10k.zsh-theme.org 2>/dev/null
+    wget -O ~/.p10k/powerlevel10k.zsh-theme \
+    https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
+fi
 
+# Pobierz plik konfiguracyjny, jeśli brak
+if [ ! -f ~/.p10k.zsh ]; then
+    wget -O ~/.p10k.zsh \
+    https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
+else
+    cp ~/.p10k.zsh ~/.p10k.zsh.org 2>/dev/null
+    wget -O ~/.p10k.zsh \
+    https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
+fi
 # ===== 4. Czcionki GUI/Terminal (inne dystrybucje) =====
 if [[ "$ID" != "ubuntu" && "$ID" != "debian" ]]; then
     FONT_DIR="$HOME/.local/share/fonts"
@@ -121,7 +138,7 @@ grep -qxF 'alias ee="eza -lha --header --total-size --sort=name --icons --group-
 grep -qxF 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' ~/.zshrc || \
     echo 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
 
-if ! grep -q "neofetch" ~/.zshrc 2>dec/null; then
+if ! grep -q "neofetch" ~/.zshrc 2>dev/null; then
     cat <<'EOF' >> ~/.zshrc
 
 if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ] && command -v neofetch >/dev/null 2>&1; then
@@ -146,30 +163,8 @@ alias remind="show_replacements"
 EOF
 fi
 
-# ===== 6. Powerlevel10k automatycznie =====
-if [ -f ~/.p10k/powerlevel10k.zsh-theme ]; then
-    if ! grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme; then
-        cp ~/.p10k/powerlevel10k.zsh-theme ~/.p10k/powerlevel10k.zsh-theme.org 2>/dev/null
-        rm ~/.p10k/powerlevel10k.zsh-theme 2>/dev/null
-        wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
-    fi
-else
-    wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
-fi
-
-# ===== 6. Powerlevel10k automatycznie =====
-if [ -f ~/.p10k.zsh ]; then
-    if ! grep -q ~/.p10k.zsh >2/dev/null; then
-        cp ~/.p10k.zsh ~/.p10k.zsh.org 2>/dev/null
-        rm ~/.p10k.zsh 2>/dev/null
-        wget -O ~/.p10k.zsh https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
-    fi
-else
-    wget -O ~/.p10k.zsh https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
-fi
-
 # ===== 7. Zakończenie =====
-echo -e '\033[0;31mPAMIĘTAJ: ustaw czcionkę w terminalu na MERLO po zakończeniu!\033[0m'
+echo -e '\033[0;31mPAMIĘTAJ: ustaw czcionkę w terminalu na MESLO po zakończeniu!\033[0m'
 read -p "Chcesz zrestartować teraz? (tak/nie): " REBOOT
 [[ "$REBOOT" == "tak" ]] && sudo reboot
  
