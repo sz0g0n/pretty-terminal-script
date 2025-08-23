@@ -147,9 +147,14 @@ EOF
 fi
 
 # ===== 6. Powerlevel10k automatycznie =====
-if ! grep -q "pretty-terminal" ~/.p10k.zsh; then
-    cp ~/.p10k.zsh ~/.p10k.zsh.org 2>/dev/null
-    rm ~/.p10k.zsh 2>/dev/null
+# ===== 6. Powerlevel10k automatycznie =====
+if [ -f ~/.p10k.zsh ]; then
+    if ! grep -q "pretty-terminal" ~/.p10k.zsh; then
+        cp ~/.p10k.zsh ~/.p10k.zsh.org 2>/dev/null
+        rm ~/.p10k.zsh 2>/dev/null
+        wget -O ~/.p10k.zsh https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
+    fi
+else
     wget -O ~/.p10k.zsh https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
 fi
 
