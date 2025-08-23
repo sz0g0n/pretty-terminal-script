@@ -134,7 +134,7 @@ else
     echo "Entry already exists in .zshrc, skipping."
     echo ""
 fi
-
+wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
 # ===== 4. Install MesloLGS NF font =====
 
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
@@ -247,6 +247,22 @@ if ! grep -q "POWERLEVEL9K_INSTANT_PROMPT" ~/.zshrc; then
 else
     echo -e "\033[0;33mPOWERLEVEL9K_INSTANT_PROMPT already exists in .zshrc, skipping.\033[0m"
 fi
+# question about automated p10k configuration
+
+echo ""
+echo ""
+echo -e "\033[0;32Do you want to set automated p10k() configuration?\033[0m"
+echo ""
+echo ""
+read -p $'Czy chcesz kontynuować? (tak/nie): ' CONFIRM
+if [[ "$CONFIRM" != "tak" ]]; then
+cp ~/.p10k.zsh ~/.p10kzsh.org
+rm -f ~/.p10k.zsh
+wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
+
+fi
+
+
 
 # ===== 6. End of script =====
 echo -e "\033[0;32mA reboot may be required for everything to work correctly.\033[0m"

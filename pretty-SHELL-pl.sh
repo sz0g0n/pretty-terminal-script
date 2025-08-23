@@ -246,6 +246,23 @@ if ! grep -q "POWERLEVEL9K_INSTANT_PROMPT" ~/.zshrc; then
 else
     echo -e "\033[0;33mPOWERLEVEL9K_INSTANT_PROMPT już istnieje w .zshrc, pomijam.\033[0m"
 fi
+# pytanie czy chce automatyczny preset p10k
+
+echo ""
+echo ""
+echo -e "\033[0;32chcesz automatyczną konfigurację p10k?\033[0m"
+echo ""
+echo ""
+read -p $'Czy chcesz kontynuować? (tak/nie): ' CONFIRM
+if [[ "$CONFIRM" != "tak" ]]; then
+cp ~/.p10k.zsh ~/.p10kzsh.org
+rm -f ~/.p10k.zsh
+wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
+
+fi
+
+
+
 
 # ===== 6. Zakończenie skryptu =====
 echo -e "\033[0;32mAby wszystko działało poprawnie, może być wymagany reboot.\033[0m"
