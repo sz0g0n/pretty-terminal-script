@@ -92,6 +92,7 @@ fi
 if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
 fi
+    wget -O ~/.p10k/p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/p10k.zsh
 if ! grep -q "powerlevel10k" ~/.zshrc 2>/dev/null; then
     echo 'source ~/.p10k/powerlevel10k.zsh-theme' >> ~/.zshrc
 fi
