@@ -66,27 +66,50 @@ install_if_missing nvim neovim
 install_if_missing neofetch neofetch
 install_if_missing bat bat
 
-# ===== 2b. Czcionki konsoli (Debian/Ubuntu) =====
+# ===== 2b. Czcionki konsoli (Debian/Ubuntu) =====                                                                                      
+source /etc/os-release
+echo "System ID: $ID"
+
+# Sprawdź, czy system to Debian/Ubuntu
 if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
     CONSOLE_FONT="/usr/share/consolefonts/MesloLGLDZNerdFontMono-Regular.psf"
+    
     if [ ! -f "$CONSOLE_FONT" ]; then
         PSF_DIR="/usr/share/consolefonts"
         PSF_FILE="$PSF_DIR/MesloLGLDZNerdFontMono-Regular.psf"
-        sudo mkdir -p "$PSF_DIR"
-        sudo wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
-        sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" /etc/default/console-setup
 
+        # Pobierz i zainstaluj font konsoli
+         mkdir -p "$PSF_DIR"
+         wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
+         sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" /etc/default/console-setup
+
+        # Pobierz i zainstaluj font TTF dla użytkownika
         mkdir -p ~/.local/share/fonts
         wget -q -O ~/.local/share/fonts/MesloLGLDZNerdFont-Regular.ttf "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_ttf/MesloLGLDZNerdFont-Regular.ttf"
         fc-cache -fv
+    fi
 
-        if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-            PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
-            gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" font "MesloLGLDZNerdFont-Regular 12"
-            gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" use-system-font false
-        fi
+    # Jeśli środowisko to GNOME, ustaw font w terminalu
+    if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+        # Pobierz UUID profilu GNOME Terminal
+        PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+
+        # Ustaw font i wyłącz użycie systemowego
+        gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" font "MesloLGLDZ Nerd Font 12"
+        gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" use-system-font false
+
+        echo "Font GNOME Terminal ustawiony dla profilu $PROFILE."
     fi
 fi
+
+
+### to dziala
+###PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+##echo $PROFILE
+#
+#gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" font "MesloLGLDZ Nerd Font 12"
+
+
 
 # ===== 3. Powerlevel10k =====
 if [ ! -d "${HOME}/.p10k" ]; then
@@ -112,7 +135,7 @@ else
 fi
 
 # Doanie source do pliku .zshrc
-if ! grep -q ".p10.zsh" ~/.zshrc 2>/dev/null; then
+if ! grep -q ".p10k.zsh" ~/.zshrc 2>/dev/null; then
     echo 'source ~/.p10k/powerlevel10k.zsh-theme' >> ~/.zshrc
     echo 'source ~/.p10k.zsh' >> ~/.zshrc
 fi
