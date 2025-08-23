@@ -92,7 +92,7 @@ fi
 if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
 fi
-    wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
+#    wget -O ~/.p10k.zsh https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/.p10k.zsh
 if ! grep -q "powerlevel10k" ~/.zshrc 2>/dev/null; then
     echo 'source ~/.p10k/powerlevel10k.zsh-theme' >> ~/.zshrc
 fi
@@ -147,10 +147,10 @@ EOF
 fi
 
 # ===== 6. Powerlevel10k automatycznie =====
-if ! grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme; then
-    cp ~/.p10k/powerlevel10k.zsh-theme ~/.p10k/powerlevel10k.zsh-theme.org
-    rm ~/.p10k/powerlevel10k.zsh-theme
-    wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/powerlevel10k.zsh-theme
+if ! grep -q "pretty-terminal" ~/.p10k.zsh; then
+    cp ~/.p10k.zsh ~/.p10k.zsh.org
+    rm ~/.p10k.zsh
+    wget -O ~/.p10k/powerlevel10k.zsh-theme https://raw.githubusercontent.com/sz0g0n/pretty-terminal-script/refs/heads/main/.p10k.zsh
 fi
 
 # ===== 7. Zakończenie =====
