@@ -113,6 +113,7 @@ fi
 
 # Doanie source do pliku .zshrc
 if ! grep -q ".p10.zsh" ~/.zshrc 2>/dev/null; then
+    echo 'source ~/.p10k/powerlevel10k.zsh-theme' >> ~/.zshrc
     echo 'source ~/.p10k.zsh' >> ~/.zshrc
 fi
 
