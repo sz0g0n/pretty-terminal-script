@@ -121,7 +121,7 @@ grep -qxF 'alias ee="eza -lha --header --total-size --sort=name --icons --group-
 grep -qxF 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' ~/.zshrc || \
     echo 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
 
-if ! grep -q "neofetch" ~/.zshrc; then
+if ! grep -q "neofetch" ~/.zshrc 2>dec/null; then
     cat <<'EOF' >> ~/.zshrc
 
 if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ] && command -v neofetch >/dev/null 2>&1; then
