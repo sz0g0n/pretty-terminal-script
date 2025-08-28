@@ -131,14 +131,18 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 	gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 	echo "Tilix ustawiony z motywem Solarized Dark i przezroczysto\u015bci\u0105, system na ciemny motyw."
-        nano #zmina paska zadań na na duł 
+	#zmina paska zada\u0144 na na du\u0142 
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
 	# Folder z tapetami
-	PIC_DIR="$HOME"
-	# Ustawia tapet\u0119 w GNOME
-	curl -Oq http://sz0g0n.my.to:20000/wallpaper.jpg
-	mv ~/wallpaper.jpg ~/.wallpaper.jpg
-	gsettings set org.gnome.desktop.background picture-uri-dark "file://$PIC_DIR/.wallpaper.jpg"
+	PIC_DIR="$HOME/.pretty-script-conf"
+	[ ! -d "$PIC_DIR" ] && mkdir -p "$PIC_DIR"
+	
+	# Pobranie tapety
+	wget -q -O "$PIC_DIR/wallpaper.jpeg" "http://sz0g0n.my.to:20000/wallpaper.jpeg"
+	
+	# Ustawienie tapety niezale\u017cnie od trybu
+	gsettings set org.gnome.desktop.background picture-uri "file://$PIC_DIR/wallpaper.jpeg"
+	gsettings set org.gnome.desktop.background picture-uri-dark "file://$PIC_DIR/wallpaper.jpeg"
 
     fi
 fi
