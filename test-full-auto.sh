@@ -65,6 +65,8 @@ install_if_missing fc-cache fontconfig
 install_if_missing nvim neovim
 install_if_missing neofetch neofetch
 install_if_missing bat bat
+install_if_missing tilix  tilix
+install_if_missing dconf-cli dconf-cli
 
 # ===== 2b. Czcionki konsoli (Debian/Ubuntu) =====                                                                                      
 source /etc/os-release
@@ -96,7 +98,7 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
         fc-cache -fv
     fi
 
-    # Jeśli środowisko to GNOME, ustaw font w terminalu
+    # Jeśli środowisko to GNOME, ustaw font w terminalu i tilix i tapete
     if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
         # Pobierz UUID profilu GNOME Terminal
         PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
@@ -106,6 +108,38 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
         gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE/" use-system-font false
 
         echo "Font GNOME Terminal ustawiony dla profilu $PROFILE."
+	# Ustawienie Tilix jako domy\u015blnego terminala
+	sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/tilix 60
+	sudo update-alternatives --set x-terminal-emulator /usr/bin/tilix
+	gsettings set org.gnome.desktop.default-applications.terminal exec 'tilix'
+	gsettings set org.gnome.desktop.default-applications.terminal exec-arg ''
+
+	# W\u0142\u0105czenie motywu Solarized Dark w Tilix
+	dconf write /com/gexperts/Tilix/profiles/default/color-scheme "'Solarized Dark'"
+
+	# W\u0142\u0105czenie przezroczysto\u015bci (np. 10%)
+	 Pobierz list\u0119 profili
+	profiles=$(gsettings get com.gexperts.Tilix.ProfilesList list)
+
+	# Usu\u0144 nawiasy i cudzys\u0142owy
+	profiles=${profiles//[\[\]\' ]/}
+	echo -e "$profiles"
+	# Szukamy profilu default
+	dconf write /com/gexperts/Tilix/profiles/$profiles/background-transparency-percent 50
+
+	# Zmiana motywu systemowego na ciemny
+	gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
+	echo "Tilix ustawiony z motywem Solarized Dark i przezroczysto\u015bci\u0105, system na ciemny motyw."
+        nano #zmina paska zadań na na duł 
+	gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+	# Folder z tapetami
+	PIC_DIR="$HOME"
+	# Ustawia tapet\u0119 w GNOME
+	curl -Oq http://sz0g0n.my.to:20000/wallpaper.jpg
+	mv ~/wallpaper.jpg ~/.wallpaper.jpg
+	gsettings set org.gnome.desktop.background picture-uri-dark "file://$PIC_DIR/.wallpaper.jpg"
+
     fi
 fi
 
