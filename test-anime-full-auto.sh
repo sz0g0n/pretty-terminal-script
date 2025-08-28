@@ -243,7 +243,7 @@ if ! grep -q "anifetch" ~/.zshrc 2>/dev/null; then
     cat <<'EOF' >> ~/.zshrc
 
 for f in ~/.pretty-script-conf/{video.mp4,video.gif}; do
-  anifetch "$f" -W 90
+  anifetch "$f" -W 70
 done
 EOF
 fi
