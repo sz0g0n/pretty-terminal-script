@@ -118,7 +118,6 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 	dconf write /com/gexperts/Tilix/profiles/default/color-scheme "'Solarized Dark'"
 
 	# W\u0142\u0105czenie przezroczysto\u015bci (np. 10%)
-	 Pobierz list\u0119 profili
 	profiles=$(gsettings get com.gexperts.Tilix.ProfilesList list)
 
 	# Usu\u0144 nawiasy i cudzys\u0142owy
