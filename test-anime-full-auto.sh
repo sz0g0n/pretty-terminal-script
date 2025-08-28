@@ -153,11 +153,6 @@ fi
 # 	======ANIME=======
 #avaible files anime
 #chicka  DXD  DXDv2  FULLMETAL  jiraiya  villang_saga  wallpaper.jpeg
-pipx ensurepath
-pipx install git+https://github.com/Notenlish/anifetch.git
-
-
-
 HTML_ANIME="http://sz0g0n.my.to:20000/FULLMETAL/Fullmetal%20Alchemist%20Brotherhood%20-%20Ending%201%20%5B4K%2060FPS%20%20Creditless%20%20CC%5D.mp4"
 
 if [[ $HTML_ANIME == *.mp4 ]]; then
@@ -248,20 +243,6 @@ grep -qxF 'anifetch' ~/.zshrc || \
 
 
 
-
-
-
-
-if ! grep -q "neofetch" ~/.zshrc 2>/dev/null; then
-    cat <<'EOF' >> ~/.zshrc
-
-if [[ $- == *i* ]] && [ "$SHLVL" -eq 1 ] && command -v neofetch >/dev/null 2>&1; then
-    echo -e "\n"
-    neofetch
-fi
-EOF
-fi
-
 if ! grep -q "Przypominajka zamienników komend" ~/.zshrc; then
     cat <<'EOF' >> ~/.zshrc
 
@@ -276,6 +257,11 @@ show_replacements() {
 alias remind="show_replacements"
 EOF
 fi
+#anifetch
+zsh -c "pipx ensurepath && pipx install git+https://github.com/Notenlish/anifet>
+
+
+pipx install git+https://github.com/Notenlish/anifetch.git
 
 # ===== 7. Zakończenie =====
 echo -e '\033[0;31mPAMIĘTAJ: ustaw czcionkę w terminalu na MESLO po zakończeniu!\033[0m'
