@@ -237,10 +237,16 @@ grep -qxF 'alias ee="eza -lha --header --total-size --sort=name --icons --group-
     echo 'alias ee="eza -lha --header --total-size --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
 grep -qxF 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' ~/.zshrc || \
     echo 'alias e="eza -lha --header --sort=name --icons --group-directories-first --grid --octal-permissions --no-permissions --classify"' >> ~/.zshrc
-grep -qxF 'anifetch' ~/.zshrc || \
-    echo 'anifetch ~/.pretty-script-conf/*.{mp4,gif}' >> ~/.zshrc
 
 
+if ! grep -q "anifetch" ~/.zshrc 2>/dev/null; then
+    cat <<'EOF' >> ~/.zshrc
+
+for f in ~/.pretty-script-conf/{video.mp4,video.gif}; do
+  anifetch "$f" -W 90
+done
+EOF
+fi
 
 
 if ! grep -q "Przypominajka zamienników komend" ~/.zshrc; then
