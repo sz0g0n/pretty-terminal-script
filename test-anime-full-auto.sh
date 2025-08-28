@@ -264,7 +264,7 @@ alias remind="show_replacements"
 EOF
 fi
 #anifetch
-zsh -c "pipx ensurepath && pipx install git+https://github.com/Notenlish/anifet>
+zsh -c "pipx ensurepath && pipx install git+https://github.com/Notenlish/anifetch.git"
 
 
 pipx install git+https://github.com/Notenlish/anifetch.git
