@@ -80,14 +80,14 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 	FILE="/etc/default/console-setup"
 
         # Pobierz i zainstaluj font konsoli
-         mkdir -p "$PSF_DIR"
-         wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
+         sudo mkdir -p "$PSF_DIR"
+         sudo wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
 	 if grep -q '^FONT=' "$FILE"; then
   	 echo "Linia FONT= istnieje w pliku." 
-  	 sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" "$FILE"
+  	 sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" "$FILE"
 	 else
 	 echo "Linia FONT= nie istnieje w pliku. Dodaję ją." 
-	 echo "FONT=\"$PSF_FILE\"" | sudo tee -a /etc/default/console-setup
+	 sudo echo "FONT=\"$PSF_FILE\"" | sudo tee -a /etc/default/console-setup
 	 fi
 
         # Pobierz i zainstaluj font TTF dla użytkownika
