@@ -16,6 +16,8 @@ The script checks and installs the following tools if missing:
 - `nvim` – Neovim editor
 - `neofetch` – system information display
 - `Powerlevel10k` – display-TTY
+- `` –
+
 ## Features
 
 - Automatically sets up aliases and command replacement reminders
@@ -50,3 +52,4 @@ This project uses the following third-party software:
 - dust: MIT License - https://github.com/bootandy/dust
 - dfc: GPLv3 - https://github.com/rolinh/dfc
 - Powerlevel10k (p10k) – https://github.com/romkatv/powerlevel10k
+- Powerline Fonts: MIT License - https://github.com/powerline/fonts

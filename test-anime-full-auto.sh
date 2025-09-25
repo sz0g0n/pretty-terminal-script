@@ -83,13 +83,13 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
     
     if [ ! -f "$CONSOLE_FONT" ]; then
         PSF_DIR="/usr/share/consolefonts"
-        PSF_FILE="$PSF_DIR/MesloLGLDZNerdFontMono-Regular.psf"
+        PSF_FILE="ter-powerline-v16n.psf.gz"
 	FILE="/etc/default/console-setup"
 
         # Pobierz i zainstaluj font konsoli
          sudo mkdir -p "$PSF_DIR"
-         sudo wget -q -O "$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/MesloLGLDZNerdFontMono-Regular.psf"
-	 if grep -q '^FONT=' "$FILE"; then
+         wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
+	 if grep -q "^FONT=$PSF_FILE" "$FILE"; then
   	 echo "Linia FONT= istnieje w pliku." 
   	 sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" "$FILE"
 	 else
