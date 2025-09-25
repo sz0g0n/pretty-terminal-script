@@ -182,15 +182,11 @@ fi
 # Pobierz i zainstaluj font konsoli
          sudo mkdir -p "$PSF_DIR"
          sudo wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
-	 LINE="setfont /usr/share/ter-powerline-v16n.psf.gz"
+	 LINE="setfont '/usr/share/consolefonts/ter-powerline-v16n.psf.gz'"
 	 FILE=~/.zshrc
 
 	 #  Sprawdzenie czy linia istnieje, jeśli nie – dopisz[
 	 grep -qxF "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
-         echo "ustawienie setfont w zshrc"
-         else
-         echo "setfont w plku zshrc juz jest"
-
 
 
 # Pobierz motyw, jeśli brak lub brak wzmianki 'pretty-terminal'
