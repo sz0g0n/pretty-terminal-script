@@ -86,17 +86,6 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
         PSF_FILE="ter-powerline-v16n.psf.gz"
 	FILE="/etc/default/console-setup"
 
-        # Pobierz i zainstaluj font konsoli
-         sudo mkdir -p "$PSF_DIR"
-         sudo wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
-	 if grep -q "^FONT=$PSF_FILE" "$FILE"; then
-  	 echo "Linia FONT= istnieje w pliku." 
-  	 sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" "$FILE"
-	 else
-	 echo "Linia FONT= nie istnieje w pliku. Dodaję ją." 
-	 sudo echo "FONT=\"$PSF_FILE\"" | sudo tee -a /etc/default/console-setup
-	 fi
-
         # Pobierz i zainstaluj font TTF dla użytkownika
         mkdir -p ~/.local/share/fonts
         wget -q -O ~/.local/share/fonts/MesloLGLDZNerdFont-Regular.ttf "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_ttf/MesloLGLDZNerdFont-Regular.ttf"
@@ -190,6 +179,20 @@ if [ ! -d "${HOME}/.p10k" ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.p10k
 fi
 # ===== 6. Powerlevel10k automatycznie =====
+# Pobierz i zainstaluj font konsoli
+         sudo mkdir -p "$PSF_DIR"
+         sudo wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
+	 LINE="setfont /usr/share/ter-powerline-v16n.psf.gz"
+	 FILE=~/.zshrc
+
+	 #  Sprawdzenie czy linia istnieje, jeśli nie – dopisz[
+	 grep -qxF "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+         echo "ustawienie setfont w zshrc"
+         else
+         echo "setfont w plku zshrc juz jest"
+
+
+
 # Pobierz motyw, jeśli brak lub brak wzmianki 'pretty-terminal'
 if [ ! -f ~/.p10k/powerlevel10k.zsh-theme ] || \
    ! grep -q "pretty-terminal" ~/.p10k/powerlevel10k.zsh-theme 2>/dev/null; then
