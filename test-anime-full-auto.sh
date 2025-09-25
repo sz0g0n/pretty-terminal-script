@@ -88,7 +88,7 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 
         # Pobierz i zainstaluj font konsoli
          sudo mkdir -p "$PSF_DIR"
-         wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
+         sudo wget -q -O "$PSF_DIR/$PSF_FILE" "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_psf/$PSF_FILE"
 	 if grep -q "^FONT=$PSF_FILE" "$FILE"; then
   	 echo "Linia FONT= istnieje w pliku." 
   	 sudo sed -i "s|^FONT=.*|FONT=\"$PSF_FILE\"|" "$FILE"
@@ -102,7 +102,8 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
         wget -q -O ~/.local/share/fonts/MesloLGLDZNerdFont-Regular.ttf "https://github.com/sz0g0n/pretty-terminal-script/raw/refs/heads/main/font_ttf/MesloLGLDZNerdFont-Regular.ttf"
         fc-cache -fv
     fi
-
+	PIC_DIR="$HOME/.pretty-script-conf"
+	mkdir -p "$PIC_DIR"
     # Jeśli środowisko to GNOME, ustaw font w terminalu i tilix i tapete
     if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
         # Pobierz UUID profilu GNOME Terminal
@@ -138,7 +139,7 @@ if [[ "$ID" == "ubuntu" || "$ID" == "debian" ]]; then
 	#zmina paska zada\u0144 na na du\u0142 
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
 	# Folder z tapetami
-	PIC_DIR="$HOME/.pretty-script-conf"
+	
 	[ ! -d "$PIC_DIR" ] && mkdir -p "$PIC_DIR"
 	
 	# Pobranie tapety
